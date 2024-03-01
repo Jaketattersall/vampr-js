@@ -1,32 +1,40 @@
 class Vampire {
-  constructor(name, yearConverted) {
-    this.name = name;
-    this.yearConverted = yearConverted;
-    this.offspring = [];
-    this.creator = null;
-  }
-
-  /** Simple tree methods **/
-
-  // Adds the vampire as an offspring of this vampire
-  addOffspring(vampire) {
-
-  }
-
-  // Returns the total number of vampires created by that vampire
-  get numberOfOffspring() {
-
-  }
-
-  // Returns the number of vampires away from the original vampire this vampire is
-  get numberOfVampiresFromOriginal() {
-
-  }
-
-  // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
-  isMoreSeniorThan(vampire) {
-
-  }
+    constructor(name, yearConverted) {
+      this.name = name;
+      this.yearConverted = yearConverted;
+      this.offspring = [];
+      this.creator = null;
+    }
+  
+    /** Simple tree methods **/
+  
+    // Adds the vampire as an offspring of this vampire
+    addOffspring(vampire) {
+      this.offspring.push(vampire);
+      vampire.creator = this;
+    }
+  
+    // Returns the total number of vampires created by that vampire
+    get numberOfOffspring() {
+      return this.offspring.length;
+    }
+  
+    // Returns the number of vampires away from the original vampire this vampire is
+    get numberOfVampiresFromOriginal() {
+      let numberOfVampires = 0;
+      let currentVampire = this;
+      while (currentVampire.creator) {
+        numberOfVampires++;
+        currentVampire = currentVampire.creator;
+      }
+      return numberOfVampires;
+    }
+  
+    // Returns true if this vampire is more senior than the other vampire. (Who is closer to the original vampire)
+    isMoreSeniorThan(vampire) {
+      return this.numberOfVampiresFromOriginal < vampire.numberOfVampiresFromOriginal;
+    }
+  
 
   /** Stretch **/
 
@@ -36,9 +44,21 @@ class Vampire {
   // * when comparing Ansel and Sarah, Ansel is the closest common anscestor.
   // * when comparing Ansel and Andrew, Ansel is the closest common anscestor.
   closestCommonAncestor(vampire) {
-
+    let currentVampire = this;
+    while (currentVampire) {
+      let otherVampire = vampire;
+      while (otherVampire) {
+        if (currentVampire === otherVampire) {
+          return currentVampire;
+        }
+        otherVampire = otherVampire.creator;
+      }
+      currentVampire = currentVampire.creator;
+    }
+    return null; // If no common ancestor found
   }
 }
+  
 
 module.exports = Vampire;
 
